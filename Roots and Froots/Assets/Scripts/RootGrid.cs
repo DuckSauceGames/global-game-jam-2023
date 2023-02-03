@@ -7,14 +7,22 @@ public class RootGrid : MonoBehaviour {
     public int width = 25;
     public int height = 100;
 
-    public GameObject potato;
-    public int potatoCount = 20;
+    [System.Serializable]
+    public class VegDetails {
+        public GameObject prefab;
+        public int maxCount;
+        public int respawnChance;
 
-    public GameObject carrot;
-    public int carrotCount = 10;
+        private int currentCount;
+        
+        public int Count() { return currentCount; }
+        public void IncreaseCount() { currentCount++; }
+        public void DecreaseCount() { currentCount--; }
+    }
 
-    public GameObject onion;
-    public int onionCount = 5;
+    public VegDetails potatoDetails;
+    public VegDetails carrotDetails;
+    public VegDetails onionDetails;
 
     private List<List<GameObject>> grid = new List<List<GameObject>>();
     
@@ -23,17 +31,33 @@ public class RootGrid : MonoBehaviour {
         for (int i = 0; i < height; i++) column.Add(null);
         for (int i = 0; i < width; i++) grid.Add(column);
 
-        plantVeg(potato, potatoCount);
-        plantVeg(carrot, carrotCount);
-        plantVeg(onion, onionCount);
+        plantInitialVeg(potatoDetails);
+        plantInitialVeg(carrotDetails);
+        plantInitialVeg(onionDetails);
     }
 
-    private void plantVeg(GameObject veg, int count) {
-        for (int i = 0; i < count; i++) {
-            int x = Random.Range(0, width);
-            int y = Random.Range(0, height);
-            if (grid[x][y] == null)
-                grid[x][y] = GameObject.Instantiate(veg, new Vector2(x/10f, y/10f), Quaternion.identity, this.transform);
+    void Update() {
+        respawnVeg(potatoDetails);
+        respawnVeg(carrotDetails);
+        respawnVeg(onionDetails);
+    }
+
+    private void plantInitialVeg(VegDetails vegDetails) {
+        for (int i = 0; i < vegDetails.maxCount; i++) {
+            plantVeg(vegDetails);
         }
+    }
+
+    private void plantVeg(VegDetails vegDetails) {
+        int x = Random.Range(0, width);
+        int y = Random.Range(0, height);
+        if (grid[x][y] == null) {
+            grid[x][y] = GameObject.Instantiate(vegDetails.prefab, new Vector2(x/10f, y/10f), Quaternion.identity, this.transform);
+            vegDetails.IncreaseCount();
+        }
+    }
+
+    private void respawnVeg(VegDetails vegDetails) {
+        if (vegDetails.Count() < vegDetails.maxCount && Random.Range(1, vegDetails.respawnChance) == 1) plantVeg(vegDetails);
     }
 }
