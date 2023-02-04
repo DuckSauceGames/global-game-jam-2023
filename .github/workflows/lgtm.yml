@@ -18,8 +18,10 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const goodOptions = ['lgtm', 'party', 'yes', 'success', 'approve', 'noice'];
+            
             return {
-              approved: '${{ github.event.review.body }}'.trim() || 'lgtm',
+              approved: goodOptions[Math.floor(Math.random()*goodOptions.length)],
               changes_requested: 'no',
             }['${{ github.event.review.state }}']
           result-encoding: string
