@@ -19,7 +19,7 @@ jobs:
         with:
           script: |
             return {
-              approved: 'lgtm',
+              approved: '${{ github.event.review.body }}'.trim() || 'lgtm',
               changes_requested: 'no',
             }['${{ github.event.review.state }}']
           result-encoding: string
