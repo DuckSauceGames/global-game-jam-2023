@@ -11,6 +11,8 @@ public class Worm : MonoBehaviour
         public Veg.Vegetable type;
         public int currentCount;
 
+        public int currentSaved;
+
         public VegDetails(Veg.Vegetable type) { this.type = type; }
     }
 
@@ -28,6 +30,14 @@ public class Worm : MonoBehaviour
 
     private int money = 0;
 
+    public GameObject sound;
+
+    public GameObject statsBar;
+
+    public int vegCost = 100;
+
+    public float stamina;
+
     private Shop currentShop;
     public List<Shop> allShops;
 
@@ -40,6 +50,9 @@ public class Worm : MonoBehaviour
         System.Enum.GetValues(typeof(Veg.Vegetable)).Cast<Veg.Vegetable>().ToList().ForEach(v => allVegDetails.Add(new VegDetails(v)));
 
         spi = GetComponent<SpriteRenderer>();
+        stamina = 10;
+        statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetMaxVal(Mathf.RoundToInt(stamina));
+        statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
     }
 
     //public Vector2 speed = new Vector2(5,5);
@@ -49,36 +62,56 @@ public class Worm : MonoBehaviour
     {
         float inputX = Input.GetAxis("Horizontal");
         float inputY = Input.GetAxis("Vertical");
-        Vector3 movement = new Vector3(speed * inputX, speed * inputY, 0);
-        //Vector3 movement = new Vector3(inputX, inputY, 0);
-        movement *= Time.deltaTime;
-        transform.Translate(movement);
-        //transform.Rotate();
-        if (inputX < 0) {spi.flipX = true;}
-        if (inputX > 0) {spi.flipX = false;}
-        //Debug.Log($"{speed.x} {speed.y}");
 
-        // SetInventoryCounts();
-        // SetCurrencyCounts();
-        
+        if (stamina > 0) {
+            Vector3 movement = new Vector3(speed * inputX, speed * inputY, 0);
+            //Vector3 movement = new Vector3(inputX, inputY, 0);
+            movement *= Time.deltaTime;
+            transform.Translate(movement);
+            //transform.Rotate();
+            if (inputX < 0) {spi.flipX = true;}
+            if (inputX > 0) {spi.flipX = false;}
+            //Debug.Log($"{speed.x} {speed.y}");
+
+            stamina -= Time.deltaTime;
+            statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
+        } else {
+            Debug.Log("You Ded");
+        }
+
         if (Input.GetKeyDown(KeyCode.Space)) {
             currentShop.buy(this);
         }
+
+        SetInventoryCounts();
+        SetCurrencyCounts();
     }
 
     void OnTriggerEnter2D(Collider2D collider) {
         Veg veg = collider.gameObject.GetComponent<Veg>();
-        if (veg != null)
-        {
+        string gameObjectName = collider.gameObject.name;
+
+        if (veg != null) {
             if (GetCurrentVegCount() >= maxVegCount) return;
 
             rootGrid.CollectVeg(collider.gameObject);
 
-            foreach (VegDetails vegDetails in allVegDetails)
-            {
+            sound.transform.Find("Veg Pickup").GetComponent<AudioSource>().Play();
+
+            foreach (VegDetails vegDetails in allVegDetails) {
                 if (vegDetails.type == veg.type) vegDetails.currentCount++;
             }
-
+            return;
+        }
+        if (gameObjectName == "Farm") {
+            foreach (VegDetails vegDetails in allVegDetails) {
+                vegDetails.currentSaved = vegDetails.currentCount;
+                money += vegDetails.currentCount * vegCost;
+                vegDetails.currentCount = 0;
+            }
+            stamina = 100;
+            statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
+            SetInventoryCounts();
             return;
         }
 
@@ -89,13 +122,7 @@ public class Worm : MonoBehaviour
         }
 
         Debug.Log("idk what i'm colliding with");
-        
-    }
 
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        currentShop = null;
     }
 
     private int GetCurrentVegCount() {
