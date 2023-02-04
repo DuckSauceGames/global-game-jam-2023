@@ -28,7 +28,7 @@ public class Worm : MonoBehaviour
 
     public GameObject currencyUI;
 
-    private int money = 0;
+    public int money = 0;
 
     public GameObject sound;
 
@@ -50,7 +50,7 @@ public class Worm : MonoBehaviour
         System.Enum.GetValues(typeof(Veg.Vegetable)).Cast<Veg.Vegetable>().ToList().ForEach(v => allVegDetails.Add(new VegDetails(v)));
 
         spi = GetComponent<SpriteRenderer>();
-        stamina = 10;
+        stamina = 100;
         statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetMaxVal(Mathf.RoundToInt(stamina));
         statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
     }
@@ -80,6 +80,7 @@ public class Worm : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) {
+            Debug.Log("Buying shit");
             currentShop.buy(this);
         }
 
@@ -117,12 +118,17 @@ public class Worm : MonoBehaviour
 
         Shop shop = collider.gameObject.GetComponent<Shop>();
         if (shop != null) {
+            Debug.Log("Set shop yo");
             currentShop = shop;
             return;
         }
 
         Debug.Log("idk what i'm colliding with");
 
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+        currentShop = null;
     }
 
     private int GetCurrentVegCount() {

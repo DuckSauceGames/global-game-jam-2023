@@ -16,13 +16,11 @@ public class Shop : MonoBehaviour
     
     public bool buy(Worm worm) {
         worm.speed += 5;
-        // Placeholder
-        int currency = 100;
+
 
         // Check to see if player has enough currency
-        if (currency >= _shopPrice)
-        {
-            currency -= _shopPrice;
+        if (worm.money >= _shopPrice) {
+            worm.money -= _shopPrice;
             amountActive += 1;
             return true;
         }
