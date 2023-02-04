@@ -46,4 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 25
   height: 100
-  potato: {fileID: 8005883360019700191, guid: bd061299a0f7afdfc90c0c645f0eae0c, type: 3}
+  potatoDetails:
+    prefab: {fileID: 8005883360019700191, guid: bd061299a0f7afdfc90c0c645f0eae0c, type: 3}
+    maxCount: 20
+  carrotDetails:
+    prefab: {fileID: 8005883360019700191, guid: 09ec03f696b11772dbb7ed632b64ad70, type: 3}
+    maxCount: 10
+  onionDetails:
+    prefab: {fileID: 8005883360019700191, guid: 0c928759e566dd35cb700b6f094ea5a0, type: 3}
+    maxCount: 5
