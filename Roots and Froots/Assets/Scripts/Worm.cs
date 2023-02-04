@@ -57,7 +57,6 @@ public class Worm : MonoBehaviour
 
             foreach (VegDetails vegDetails in allVegDetails) {
                 if (vegDetails.type == veg.type) vegDetails.currentCount++;
-                Debug.Log(vegDetails.type.ToString() + " " + vegDetails.currentCount);
             }
         } else {
             Debug.Log("idk what i'm colliding with");
