@@ -193,7 +193,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &254296337402722849
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -235,6 +235,7 @@ MonoBehaviour:
   rootGrid: {fileID: 0}
   inventory: {fileID: 0}
   currencyUI: {fileID: 0}
+  sound: {fileID: 0}
   vegCost: 100
 --- !u!95 &1212518291
 Animator:
