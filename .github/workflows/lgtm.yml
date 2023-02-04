@@ -21,7 +21,7 @@ jobs:
           method: 'GET'
           
       - name: Post GIF
-        if: ${{ steps.fetch-gif.outputs.response.data.embed_url }}
+        if: ${{ fromJson(steps.fetch-gif.outputs.response).data.embed_url }}
         uses: actions/github-script@v6
         with:
           script: |
@@ -31,6 +31,6 @@ jobs:
               owner,
               repo,
               pull_number: event.pull_request.id,
-              body: `![](${{ steps.fetch-gif.outputs.response.data.embed_url }})`
+              body: `![](${{ fromJson(steps.fetch-gif.outputs.response).data.embed_url }})`
               comments: [],
             })
