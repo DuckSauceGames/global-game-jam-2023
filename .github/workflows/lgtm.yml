@@ -21,7 +21,7 @@ jobs:
             return {
               approved: 'lgtm',
               changes_requested: 'no',
-            }[${{ github.event.review.state }}]
+            }['${{ github.event.review.state }}'']
           result-encoding: string
 
       - name: Fetch GIF
