@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,15 +28,20 @@ public class Worm : MonoBehaviour
 
     public GameObject currencyUI;
 
-    private int money = 0;
+    public int money = 0;
 
     public GameObject sound;
 
     public GameObject statsBar;
-    
+
     public int vegCost = 100;
 
     public float stamina;
+
+    private Shop currentShop;
+    public List<Shop> allShops;
+
+    public int speed = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -44,7 +50,7 @@ public class Worm : MonoBehaviour
         System.Enum.GetValues(typeof(Veg.Vegetable)).Cast<Veg.Vegetable>().ToList().ForEach(v => allVegDetails.Add(new VegDetails(v)));
 
         spi = GetComponent<SpriteRenderer>();
-        stamina = 10;
+        stamina = 100;
         statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetMaxVal(Mathf.RoundToInt(stamina));
         statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
     }
@@ -58,7 +64,7 @@ public class Worm : MonoBehaviour
         float inputY = Input.GetAxis("Vertical");
 
         if (stamina > 0) {
-            Vector3 movement = new Vector3(5 * inputX, 5 * inputY, 0);
+            Vector3 movement = new Vector3(speed * inputX, speed * inputY, 0);
             //Vector3 movement = new Vector3(inputX, inputY, 0);
             movement *= Time.deltaTime;
             transform.Translate(movement);
@@ -71,6 +77,11 @@ public class Worm : MonoBehaviour
             statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
         } else {
             Debug.Log("You Ded");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            Debug.Log("Buying shit");
+            currentShop.buy(this);
         }
 
         SetInventoryCounts();
@@ -91,7 +102,9 @@ public class Worm : MonoBehaviour
             foreach (VegDetails vegDetails in allVegDetails) {
                 if (vegDetails.type == veg.type) vegDetails.currentCount++;
             }
-        } else if (gameObjectName == "Farm") {
+            return;
+        }
+        if (gameObjectName == "Farm") {
             foreach (VegDetails vegDetails in allVegDetails) {
                 vegDetails.currentSaved = vegDetails.currentCount;
                 money += vegDetails.currentCount * vegCost;
@@ -100,10 +113,22 @@ public class Worm : MonoBehaviour
             stamina = 100;
             statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
             SetInventoryCounts();
-            
-        } else {
-            Debug.Log("idk what i'm colliding with");
+            return;
         }
+
+        Shop shop = collider.gameObject.GetComponent<Shop>();
+        if (shop != null) {
+            Debug.Log("Set shop yo");
+            currentShop = shop;
+            return;
+        }
+
+        Debug.Log("idk what i'm colliding with");
+
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+        currentShop = null;
     }
 
     private int GetCurrentVegCount() {
