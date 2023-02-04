@@ -12,12 +12,24 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: GIF Filter
+        id: gif-filter
+        if: github.event.review.state == 'approved' || github.event.review.state == 'changes_requested'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            return {
+              approved: 'lgtm',
+              changes_requested: 'no',
+            }['${{ github.event.review.state }}']
+          result-encoding: string
+
       - name: Fetch GIF
         id: fetch-gif
-        if: github.event.review.state == 'approved'
+        if: ${{ steps.gif-filter.outputs.result }}
         uses: fjogeleit/http-request-action@v1.12.0
         with:
-          url: 'https://api.giphy.com/v1/gifs/random?tag=lgtm&api_key=${{ secrets.GIPHY_API_KEY }}'
+          url: 'https://api.giphy.com/v1/gifs/random?tag=${{ steps.gif-filter.outputs.result }}&api_key=${{ secrets.GIPHY_API_KEY }}'
           method: 'GET'
           
       - name: Post GIF
