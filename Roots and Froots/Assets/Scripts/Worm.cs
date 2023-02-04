@@ -29,6 +29,8 @@ public class Worm : MonoBehaviour
 
     private int money = 0;
 
+    public GameObject sound;
+    
     public int vegCost = 100;
 
     // Start is called before the first frame update
@@ -68,6 +70,8 @@ public class Worm : MonoBehaviour
             if (GetCurrentVegCount() >= maxVegCount) return;
 
             rootGrid.CollectVeg(collider.gameObject);
+
+            sound.transform.Find("Veg Pickup").GetComponent<AudioSource>().Play();
 
             foreach (VegDetails vegDetails in allVegDetails) {
                 if (vegDetails.type == veg.type) vegDetails.currentCount++;
