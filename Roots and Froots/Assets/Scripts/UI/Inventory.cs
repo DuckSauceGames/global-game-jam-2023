@@ -7,7 +7,7 @@ using System.Linq;
 public class Inventory : MonoBehaviour
 {
 
-    public GameObject[] slots;
+    public List<GameObject> slots;
     public GameObject slot;
 
     // Start is called before the first frame update
@@ -26,24 +26,23 @@ public class Inventory : MonoBehaviour
                 slotName = "potato";
             }
             slotInstance.name = slotName;
-            slots.Append<GameObject>(slotInstance);
+            slots.Add(slotInstance);
             slotInstance.transform.SetParent(transform);
         }
     }
 
-    public void SetVegInventory(string veg, int number){
+    public void SetVegInventory(Veg.Vegetable veg, int number){
         foreach (GameObject slot in slots)
         {
-            if (slot.name == veg.ToLower()) {
+            if (slot.name == veg.ToString().ToLower()) {
                 slot.GetComponent<Slot>().SetCounter(number);
             }
         }
     }
 
-    public int GetVegInventory(string veg) {
-        foreach (GameObject slot in slots)
-        {
-            if (slot.name == veg.ToLower()) {
+    public int GetVegInventory(Veg.Vegetable veg) {
+        foreach (GameObject slot in slots) {
+            if (slot.name == veg.ToString().ToLower()) {
                 return slot.GetComponent<Slot>().GetCounter();
             }
         }

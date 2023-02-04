@@ -21,6 +21,8 @@ public class Worm : MonoBehaviour
 
     private SpriteRenderer spi;
 
+    public GameObject inventory;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +47,8 @@ public class Worm : MonoBehaviour
         if (inputX < 0) {spi.flipX = true;}
         if (inputX > 0) {spi.flipX = false;}
         //Debug.Log($"{speed.x} {speed.y}");
+
+        SetInventoryCounts();
     }
 
     void OnTriggerEnter2D(Collider2D collider) {
@@ -67,5 +71,11 @@ public class Worm : MonoBehaviour
         int count = 0;
         foreach (VegDetails vegDetails in allVegDetails) count += vegDetails.currentCount;
         return count;
+    }
+
+    private void SetInventoryCounts() {
+        foreach (VegDetails vegDetails in allVegDetails) {
+            inventory.GetComponent<Inventory>().SetVegInventory(vegDetails.type, vegDetails.currentCount);
+        }
     }
 }
