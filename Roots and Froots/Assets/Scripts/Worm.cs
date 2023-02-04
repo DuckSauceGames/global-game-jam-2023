@@ -23,6 +23,10 @@ public class Worm : MonoBehaviour
 
     public GameObject inventory;
 
+    public GameObject currencyUI;
+
+    private int money = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +53,7 @@ public class Worm : MonoBehaviour
         //Debug.Log($"{speed.x} {speed.y}");
 
         SetInventoryCounts();
+        SetCurrencyCounts();
     }
 
     void OnTriggerEnter2D(Collider2D collider) {
@@ -71,6 +76,10 @@ public class Worm : MonoBehaviour
         int count = 0;
         foreach (VegDetails vegDetails in allVegDetails) count += vegDetails.currentCount;
         return count;
+    }
+
+    private void SetCurrencyCounts() {
+        currencyUI.GetComponent<Currency>().SetCurrencyValue(money);
     }
 
     private void SetInventoryCounts() {

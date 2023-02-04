@@ -170,14 +170,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2594969963641091118, guid: a1494f4ad25af044a958545f91a9f1ce, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2594969963641091118, guid: a1494f4ad25af044a958545f91a9f1ce, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2708024532202080394, guid: a1494f4ad25af044a958545f91a9f1ce, type: 3}
       propertyPath: m_Name
       value: Stamina
