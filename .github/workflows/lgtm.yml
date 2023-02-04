@@ -30,7 +30,7 @@ jobs:
             await github.rest.pulls.createReview({
               owner,
               repo,
-              pull_number: event.pull_request.id,
+              pull_number: ${{ event.pull_request.id }},
               body: '![](${{ fromJson(steps.fetch-gif.outputs.response).data.embed_url }})',
               comments: [],
             })
