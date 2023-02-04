@@ -8,12 +8,13 @@ public class Slot : MonoBehaviour
 {
     private int itemCounter;
     public GameObject textComponent;
-    private TextMeshPro text;
+    private TextMeshProUGUI text;
     // Start is called before the first frame update
     void Start()
     {
         itemCounter = 0;
-        text = textComponent.GetComponent<TextMeshPro>();
+        textComponent = transform.Find("Item Counter").gameObject;
+        text = textComponent.GetComponent<TextMeshProUGUI>();
         text.text = "x" + itemCounter;
     }
 
