@@ -7,8 +7,6 @@ public class RootGrid : MonoBehaviour {
     public int width = 100;
     public int height = 100;
 
-    private float vegGap = 2f;
-
     [System.Serializable]
     public class VegDetails {
         public Veg.Vegetable type;
@@ -49,7 +47,7 @@ public class RootGrid : MonoBehaviour {
         int x = Random.Range(0, width);
         int y = Random.Range(0, height);
         if (grid[x][y] == null) {
-            grid[x][y] = GameObject.Instantiate(vegDetails.prefab, new Vector2((x/10f) + (x/10f)*vegGap, (y/10f) + (y/10f)*vegGap), Quaternion.identity, this.transform);
+            grid[x][y] = GameObject.Instantiate(vegDetails.prefab, new Vector2(x, y + transform.position.y), Quaternion.identity, this.transform);
             vegDetails.IncreaseCount();
         }
     }
