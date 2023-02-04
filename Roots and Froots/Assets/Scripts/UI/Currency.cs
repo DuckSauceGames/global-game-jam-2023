@@ -8,7 +8,7 @@ public class Currency : MonoBehaviour
     private TextMeshProUGUI text;
 
     private void Start() {
-        transform.GetComponent<TextMeshProUGUI>();
+        text = transform.GetComponent<TextMeshProUGUI>();
         SetCurrencyValue(0);
     }
     public void SetCurrencyValue(int value) {
@@ -18,6 +18,6 @@ public class Currency : MonoBehaviour
         } else {
             curr_name = "groats";
         }
-        text.text = value.ToString() + curr_name;
+        text.text = value.ToString() + " " + curr_name;
     }
 }

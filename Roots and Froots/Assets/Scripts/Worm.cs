@@ -10,6 +10,8 @@ public class Worm : MonoBehaviour
         public Veg.Vegetable type;
         public int currentCount;
 
+        public int currentSaved;
+
         public VegDetails(Veg.Vegetable type) { this.type = type; }
     }
 
@@ -26,6 +28,8 @@ public class Worm : MonoBehaviour
     public GameObject currencyUI;
 
     private int money = 0;
+
+    public int vegCost = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +62,7 @@ public class Worm : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider) {
         Veg veg = collider.gameObject.GetComponent<Veg>();
+        string gameObjectName = collider.gameObject.name;
 
         if (veg != null) {
             if (GetCurrentVegCount() >= maxVegCount) return;
@@ -67,6 +72,14 @@ public class Worm : MonoBehaviour
             foreach (VegDetails vegDetails in allVegDetails) {
                 if (vegDetails.type == veg.type) vegDetails.currentCount++;
             }
+        } else if (gameObjectName == "Farm") {
+            foreach (VegDetails vegDetails in allVegDetails) {
+                vegDetails.currentSaved = vegDetails.currentCount;
+                money += vegDetails.currentCount * vegCost;
+                vegDetails.currentCount = 0;
+            }
+            SetInventoryCounts();
+            
         } else {
             Debug.Log("idk what i'm colliding with");
         }
