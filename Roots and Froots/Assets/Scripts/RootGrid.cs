@@ -66,6 +66,7 @@ public class RootGrid : MonoBehaviour {
                         if (vegDetails.type == veg.type) vegDetails.DecreaseCount();
                     }
 
+                    grid[x][y] = null;
                     Destroy(vegObject);
 
                     return;
