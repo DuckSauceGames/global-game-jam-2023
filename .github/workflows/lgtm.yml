@@ -27,10 +27,18 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             
-            await github.rest.pulls.createReview({
+            const resp = await github.rest.pulls.createReview({
               owner,
               repo,
               pull_number: ${{ github.event.pull_request.number }},
               body: '![](${{ fromJson(steps.fetch-gif.outputs.response).data.embed_url }})',
               comments: [],
-            })
+            });
+
+            await github.rest.pulls.submitReview({
+              owner,
+              repo,
+              pull_number: ${{ github.event.pull_request.number }},
+              review_id: resp.data.id,
+              event: 'COMMENT',
+            });
