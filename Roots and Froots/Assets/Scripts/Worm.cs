@@ -30,8 +30,12 @@ public class Worm : MonoBehaviour
     private int money = 0;
 
     public GameObject sound;
+
+    public GameObject statsBar;
     
     public int vegCost = 100;
+
+    public float stamina;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +44,9 @@ public class Worm : MonoBehaviour
         System.Enum.GetValues(typeof(Veg.Vegetable)).Cast<Veg.Vegetable>().ToList().ForEach(v => allVegDetails.Add(new VegDetails(v)));
 
         spi = GetComponent<SpriteRenderer>();
+        stamina = 10;
+        statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetMaxVal(Mathf.RoundToInt(stamina));
+        statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
     }
 
     //public Vector2 speed = new Vector2(5,5);
@@ -49,14 +56,22 @@ public class Worm : MonoBehaviour
     {
         float inputX = Input.GetAxis("Horizontal");
         float inputY = Input.GetAxis("Vertical");
-        Vector3 movement = new Vector3(5 * inputX, 5 * inputY, 0);
-        //Vector3 movement = new Vector3(inputX, inputY, 0);
-        movement *= Time.deltaTime;
-        transform.Translate(movement);
-        //transform.Rotate();
-        if (inputX < 0) {spi.flipX = true;}
-        if (inputX > 0) {spi.flipX = false;}
-        //Debug.Log($"{speed.x} {speed.y}");
+
+        if (stamina > 0) {
+            Vector3 movement = new Vector3(5 * inputX, 5 * inputY, 0);
+            //Vector3 movement = new Vector3(inputX, inputY, 0);
+            movement *= Time.deltaTime;
+            transform.Translate(movement);
+            //transform.Rotate();
+            if (inputX < 0) {spi.flipX = true;}
+            if (inputX > 0) {spi.flipX = false;}
+            //Debug.Log($"{speed.x} {speed.y}");
+
+            stamina -= Time.deltaTime;
+            statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
+        } else {
+            Debug.Log("You Ded");
+        }
 
         SetInventoryCounts();
         SetCurrencyCounts();
@@ -82,6 +97,8 @@ public class Worm : MonoBehaviour
                 money += vegDetails.currentCount * vegCost;
                 vegDetails.currentCount = 0;
             }
+            stamina = 100;
+            statsBar.GetComponent<StatsBar>().stamina.GetComponent<StatBar>().SetVal(Mathf.RoundToInt(stamina));
             SetInventoryCounts();
             
         } else {
