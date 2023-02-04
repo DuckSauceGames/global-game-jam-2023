@@ -1,0 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class StatBar : MonoBehaviour
+{
+    public Slider slider;
+
+    public void SetMaxVal(int value) {
+        slider.maxValue = value;
+        slider.value = value;
+    }
+    public void SetVal(int value) {
+        slider.value = value;
+    }
+}
